@@ -34,6 +34,7 @@ public class InformationScreen extends JFrame implements ActionListener,TableMod
     private JLabel label= new JLabel();
     private JLabel label_infoTable= new JLabel(" ");
     private JLabel label_info= new JLabel(" ");
+    private JLabel userLabel = new JLabel(" ");
     
     //components for the JTable
     private JTable table= new JTable();
@@ -54,13 +55,14 @@ public class InformationScreen extends JFrame implements ActionListener,TableMod
       userName=uName;
       setTitle("Information Screen");
       setBounds(50, 100, 650, 450);
-      setLayout(new GridLayout(9,1));
+      setLayout(new GridLayout(10,1));
       
       //Title of Login Screen
       label= new JLabel("Information Screen");
       label.setVerticalAlignment(JLabel.CENTER);
       label.setHorizontalAlignment(JLabel.CENTER);
       label.setFont(new Font("Serif", Font.BOLD, 30));
+      userLabel.setText(userName);
       
       button[0]=new JButton("Score Board");
       button[0].addActionListener(this);
@@ -72,6 +74,7 @@ public class InformationScreen extends JFrame implements ActionListener,TableMod
       button[2].addActionListener(this); 
       
       add(label);
+      add(userLabel);
       add(button[0]);
       add(button[1]);
       add(button[2]);
@@ -223,13 +226,13 @@ public class InformationScreen extends JFrame implements ActionListener,TableMod
         
         //Create Score Board
         if(source== button[0]){
-            
+            this.dispose();
             ScoreBoard scoreBorad= new ScoreBoard(userID,userName);
         }
         
         //Create Leader Board
         if(source== button[1]){
-            
+            this.dispose();
             LeaderBoard scoreBoard= new LeaderBoard(); 
             
         }

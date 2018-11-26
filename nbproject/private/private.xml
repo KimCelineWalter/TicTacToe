@@ -3,13 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Studium%20Master/Distributed%20Systems/Tictactoe/src/tictactoe/Tictactoe.java</file>
-            <file>file:/D:/Studium%20Master/Distributed%20Systems/Tictactoe/src/tictactoe/RegistrationScreen.java</file>
-            <file>file:/D:/Studium%20Master/Distributed%20Systems/Tictactoe/src/tictactoe/LoginScreen.java</file>
-            <file>file:/D:/Studium%20Master/Distributed%20Systems/Tictactoe/src/tictactoe/InformationScreen.java</file>
-            <file>file:/D:/Studium%20Master/Distributed%20Systems/Tictactoe/src/tictactoe/LeaderBoard.java</file>
-            <file>file:/D:/Studium%20Master/Distributed%20Systems/Tictactoe/src/tictactoe/ScoreBoard.java</file>
-            <file>file:/D:/Studium%20Master/Distributed%20Systems/Tictactoe/src/tictactoe/TicTacToeGame.java</file>
+            <file>file:/C:/Users/Jakub/Documents/TicTacToe/nbproject/jaxws-build.xml</file>
+            <file>file:/C:/Users/Jakub/Documents/TicTacToe/src/tictactoe/LoginScreen.java</file>
+            <file>file:/C:/Users/Jakub/Documents/TicTacToe/src/tictactoe/NextMoveThread.java</file>
+            <file>file:/C:/Users/Jakub/Documents/TicTacToe/src/tictactoe/InformationScreen.java</file>
+            <file>file:/C:/Users/Jakub/Documents/TicTacToe/src/tictactoe/TicTacToeGame.java</file>
+            <file>file:/C:/Users/Jakub/Documents/TicTacToe/src/tictactoe/NewGameThread.java</file>
         </group>
     </open-files>
 </project-private>

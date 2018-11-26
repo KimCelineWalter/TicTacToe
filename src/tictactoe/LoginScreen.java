@@ -104,6 +104,7 @@ public class LoginScreen extends JFrame implements ActionListener {
                    //login was successful
                default:
                    System.out.print("Login was successful, userID :"+ userID);
+                   this.dispose();
                    //open Information screen
                    InformationScreen infScreen=new InformationScreen(userID,username);
            

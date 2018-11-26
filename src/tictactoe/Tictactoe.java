@@ -71,6 +71,7 @@ public class Tictactoe extends JFrame implements ActionListener {
         if(source==button[0]){
            //open Login page 
           System.out.println("Login");
+          this.dispose();
           LoginScreen loginscreen= new LoginScreen();
           //for tests:
           //InformationScreen infScreen= new InformationScreen(1,"kim");
@@ -81,6 +82,7 @@ public class Tictactoe extends JFrame implements ActionListener {
         if(source==button[1]){
           //open Registration page
           System.out.println("Registration");
+          this.dispose();
           RegistrationScreen regScreen= new RegistrationScreen();
           
         }
