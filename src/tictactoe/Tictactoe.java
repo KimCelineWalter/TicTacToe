@@ -72,10 +72,6 @@ public class Tictactoe extends JFrame implements ActionListener {
            //open Login page 
           System.out.println("Login");
           LoginScreen loginscreen= new LoginScreen();
-          //for tests:
-          //InformationScreen infScreen= new InformationScreen(1,"kim");
-          //ScoreBoard scoreBoard=new ScoreBoard("kim", 4, 2,1);
-          //TicTacToeGame game= new TicTacToeGame();
          
         }
         if(source==button[1]){

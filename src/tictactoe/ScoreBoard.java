@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import mywsdl.TTTWebService;
 import mywsdl.TTTWebService_Service;
 
@@ -41,43 +42,39 @@ public class ScoreBoard extends JFrame {
         label[0].setFont(new Font("Serif", Font.BOLD, 20));
         
         //show score system that will keep track of the number of wins, losses and draws the player has.
-        System.out.println("userID: "+ userID);
-         String result=null;
+        String result=null;
         try{
             result=proxy.showAllMyGames(userID);
-        }catch(Exception e) {
-            e.printStackTrace();
-            System.out.println("ERROR");
-        }
+
+            switch(result){
             
-        System.out.println("result "+ result);
-            
-        switch(result){
-            
-            case "ERROR-NOGAMES":
-                System.out.println("No games found.");
-                label[1]=new JLabel("Wins: 0 ");
-                label[2]=new JLabel("Losses: 0 ");
-                label[3]=new JLabel("Drafts: 0 ");
-                label[4]=new JLabel("No games found");
-                break;
-           case "ERROR-DB":
-                label[1]=new JLabel("Wins: - ");
-                label[2]=new JLabel("Losses: - ");
-                label[3]=new JLabel("Drafts: - ");
-                label[4]=new JLabel("No access to DBMS possible");
-                System.out.println("Cannot access the DBMS.");
-                break;
+                case "ERROR-NOGAMES":
+                    System.out.println("No games found.");
+                    label[1]=new JLabel("Wins: 0 ");
+                    label[2]=new JLabel("Losses: 0 ");
+                    label[3]=new JLabel("Drafts: 0 ");
+                    label[4]=new JLabel("No games found");
+                    break;
+                case "ERROR-DB":
+                    label[1]=new JLabel("Wins: - ");
+                    label[2]=new JLabel("Losses: - ");
+                    label[3]=new JLabel("Drafts: - ");
+                    label[4]=new JLabel("No access to DBMS possible");
+                    System.out.println("Cannot access the DBMS.");
+                    break;
                     
-           default:    
-                System.out.println("Games found");
-                //find the number of wins, losses and drafts of the player
-                FindWinsLossesDrafts(result);
-                label[1]=new JLabel("Wins: "+ wins);
-                label[2]=new JLabel("Losses: "+ losses);
-                label[3]=new JLabel("Drafts: "+ drafts);
-                label[4]=new JLabel(" ");
-                break;
+                default:    
+                    System.out.println("Games found");
+                    //find the number of wins, losses and drafts of the player
+                    FindWinsLossesDrafts(result);
+                    label[1]=new JLabel("Wins: "+ wins);
+                    label[2]=new JLabel("Losses: "+ losses);
+                    label[3]=new JLabel("Drafts: "+ drafts);
+                    label[4]=new JLabel(" ");
+                    break;
+            }
+        }catch(Exception exc) {
+            JOptionPane.showMessageDialog(null, exc.getMessage());
         }
 
         add(label[0]);
@@ -100,6 +97,7 @@ public class ScoreBoard extends JFrame {
          int gameID=0;
          String user1=null;
          String user2=null;
+         String started=null;
          String win=null;
          
          for (int i=0; i<numGames; i++){
@@ -111,52 +109,53 @@ public class ScoreBoard extends JFrame {
               //parameter 2 is player 2 
              user2=parameters[2];
              //System.out.println(gameID+" "+user1+" "+user2+" "+userName);
-             win=proxy.checkWin(gameID);
-             
-             if(user1.equals(userName)){
-                 switch(win){
-                     case "0":
-                         //game hasn’t been won but can continue to be played
-                         break;
-                     case "1":
-                         //Player 1 won --> user won
-                         wins++;
-                         break;
-                     case "2":
-                         //Player 2 won --> user lost
-                         losses++;
-                         break;
-                     case "3":
-                         //Game is a draw
-                         drafts++;
-                         break;
-                     default:
-                         break;
+             started=parameters[3];
 
-                }     
-             }else { //user == player2
-                 switch(win){
-                     case "0":
-                         //game hasn’t been won but can continue to be played
-                         break;
-                     case "1":
-                         //Player 1 won --> user lost
-                         losses++;
-                         break;
-                     case "2":
-                         //Player 2 won --> user won
-                         wins++;
-                         break;
-                     case "3":
-                         //Game is a draw
-                         drafts++;
-                         break;
-                     default:
-                         break;
+             try{
+                win=proxy.getGameState(gameID);
 
-                 }     
-             }
-         }
+                if(user1.equals(userName)){
+                    switch(win){
+                        case "1":
+                            //Player 1 won --> user won
+                            wins++;
+                            break;
+                        case "2":
+                            //Player 2 won --> user lost
+                            losses++;
+                            break;
+                        case "3":
+                            //Game is a draw
+                            drafts++;
+                            break;
+                        default: //case -1 and 0 waiting for second player or game is in progress
+                            break;
+
+                   }     
+                }else { //user == player2
+                    switch(win){
+                        case "1":
+                            //Player 1 won --> user lost
+                            losses++;
+                            break;
+                        case "2":
+                            //Player 2 won --> user won
+                            wins++;
+                            break;
+                        case "3":
+                            //Game is a draw
+                            drafts++;
+                            break;
+                        default://case -1 and 0 waiting for second player or game is in progress
+                            break;
+
+                    }     
+                }
+               }catch(Exception e){
+                  System.out.println(e.getMessage());
+                  //JOptionPane.showMessageDialog(null, e.getMessage());
+               }
+            }
          
          System.out.println("wins: "+wins+" losses: "+losses+" draft: "+drafts);
     }

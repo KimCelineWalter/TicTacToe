@@ -70,9 +70,7 @@ public class TicTacToeGame extends JFrame{
      //case 2: client is player 2 and joined the created game from player 1
      panel=new TicTacToePanel();
      add(panel,BorderLayout.CENTER);
-     
 
- 
  }
 
     class TicTacToePanel extends JPanel implements ActionListener{

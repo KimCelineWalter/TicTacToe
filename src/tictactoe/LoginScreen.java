@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import mywsdl.TTTWebService;
@@ -88,13 +89,14 @@ public class LoginScreen extends JFrame implements ActionListener {
            password=textField[1].getText();
            System.out.println(username+" "+ password);
            //check if the user is on the system
+          try{ 
+            userID=proxy.login(username, password);
            
-           userID=proxy.login(username, password);
-           System.out.println(userID);
            switch(userID){
                //login was not successful
                case -1:
                    System.out.print("Login was not successful");
+                   //JOptionPane.showMessageDialog(null, "Login was not successful");
                    label_info.setText("ATTENTION: Login was not sucessfull, even the user does not exist or the password is wrong");
                    add(label_info);
                    //open Registartion screen??
@@ -106,8 +108,13 @@ public class LoginScreen extends JFrame implements ActionListener {
                    System.out.print("Login was successful, userID :"+ userID);
                    //open Information screen
                    InformationScreen infScreen=new InformationScreen(userID,username);
+                   break;
            
-           }
+           } 
+          }catch(Exception exc){
+            JOptionPane.showMessageDialog(null, exc.getMessage());
+          }
+
            add(label_info);
            label_info.setFont(new Font("Serif", Font.BOLD, 15));
            label_info.setForeground(Color.RED);

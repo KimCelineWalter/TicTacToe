@@ -6,6 +6,7 @@
 package tictactoe;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -53,8 +56,8 @@ public class InformationScreen extends JFrame implements ActionListener,TableMod
       userID=uID;
       userName=uName;
       setTitle("Information Screen");
-      setBounds(50, 100, 650, 450);
-      setLayout(new GridLayout(9,1));
+      setBounds(50, 100, 700, 800);
+      setLayout(new GridLayout(7,1));
       
       //Title of Login Screen
       label= new JLabel("Information Screen");
@@ -76,9 +79,10 @@ public class InformationScreen extends JFrame implements ActionListener,TableMod
       add(button[1]);
       add(button[2]);
       
-      String result=proxy.showOpenGames();
-
-      switch(result){
+      try{
+        String result=proxy.showOpenGames();
+   
+        switch(result){
             
             case "ERROR-NOGAMES":
                 System.out.println("ATTENTION: No open games found.");
@@ -97,20 +101,16 @@ public class InformationScreen extends JFrame implements ActionListener,TableMod
                     
            default:    
                 System.out.println("Games found");
-                label_infoTable.setText("Open Games Table: to join a game type 'yes' in the 'Join the game' column");
-                label_infoTable.setFont(new Font("Serif", Font.BOLD, 15));
-                label_infoTable.setForeground(Color.RED);
-                add(label_infoTable);
                 //find the number of wins, losses and drafts of the player
                 OpenGamesTable(result);
                 break;
-        }
-
-      
+        }  
+      }catch(Exception exc){
+        JOptionPane.showMessageDialog(null, exc.getMessage());
+      }
+ 
       setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
       setVisible(true);
-        
-    
     }
 
     public void OpenGamesTable(String result){
@@ -154,29 +154,35 @@ public class InformationScreen extends JFrame implements ActionListener,TableMod
                 indexValid++;
              }
         }
-      
-         System.out.println(data);
-         table = new JTable(data, columnNames);
-         TableModel tabModel = table.getModel();
-         tabModel.addTableModelListener(this);
-         add(table.getTableHeader());
-         add(table); 
+        //Set Label above the table
+        label_infoTable.setText("Open Games Table: to join a game type 'yes' in the 'Join the game' column");
+        label_infoTable.setFont(new Font("Serif", Font.BOLD, 15));
+        label_infoTable.setForeground(Color.RED);
+        add(label_infoTable);
+  
+        //Create the table
+        table = new JTable(data, columnNames);
+        TableModel tabModel = table.getModel();
+        tabModel.addTableModelListener(this);
+        table.setRowHeight(20);
+        add(table.getTableHeader());
+        add(table); 
+        JScrollPane scrollpane = new JScrollPane(table);
+        scrollpane.setPreferredSize(new Dimension(480, 500));
+        add(scrollpane);
         
       }else{
-          //No valid open games for user
-         data = new Object[1][3];
-         table = new JTable(data,columnNames);
-         TableModel tabModel = table.getModel();
-         tabModel.addTableModelListener(this);
-         add(table.getTableHeader());
-         add(table);
-         remove(label_info);
-         label_info=new JLabel("no openGames to join");
-         add(label_info);
+        //No valid open games for user
+        //Set only the label, no table required?
+        label_infoTable.setText("No Open Games to join");
+        label_infoTable.setFont(new Font("Serif", Font.BOLD, 15));
+        label_infoTable.setForeground(Color.RED);
+        add(label_infoTable);
       }
     }
     
     public void tableChanged(TableModelEvent e) {
+        
         int row = e.getFirstRow();
         int column = e.getColumn();
         TableModel model = (TableModel)e.getSource();
@@ -190,33 +196,37 @@ public class InformationScreen extends JFrame implements ActionListener,TableMod
         // if user types "yes" and the first player is not the user 
         if(data.equals("yes")){
             //Join the game
-            String result=proxy.joinGame(userID,autokey[row]);
-            
-            switch(result){
-                case "1":
-                    System.out.println("successful");
-                    label_info.setText("ATTENTION: Successfully joined the game");
-                    TicTacToeGame game= new TicTacToeGame(userID,autokey[row]);
-                    break;
-                case "0":
-                    System.out.println("Unable to join the game.");
-                    label_info.setText("ATTENTION: Unable to join the game");
-                    break;
-                case "ERROR-DB":
-                    System.out.println("cannot access the DBMS.");
-                    label_info.setText("ATTENTION: Cannot access the DBMS");
-                    break;
+            try{
+                String result=proxy.joinGame(userID,autokey[row]);
+                switch(result){
+                    case "1":
+                        System.out.println("successful");
+                        label_info.setText("ATTENTION: Successfully joined the game");
+                        TicTacToeGame game= new TicTacToeGame(userID,autokey[row]);
+                        break;
+                    case "0":
+                        System.out.println("Unable to join the game.");
+                        label_info.setText("ATTENTION: Unable to join the game");
+                        break;
+                    case "ERROR-DB":
+                        System.out.println("cannot access the DBMS.");
+                        label_info.setText("ATTENTION: Cannot access the DBMS");
+                        break;
+                }  
+            }catch(Exception exc){
+                JOptionPane.showMessageDialog(null, exc.getMessage());
             }
         }else{
             System.out.println("Incorrect typing");
             label_info.setText("ATTENTION: Incorrect typing");
         }
-        remove(label_info);
+ 
         add(label_info);
         label_info.setFont(new Font("Serif", Font.BOLD, 15));
         label_info.setForeground(Color.RED);
     
     }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source= e.getSource();
@@ -235,32 +245,36 @@ public class InformationScreen extends JFrame implements ActionListener,TableMod
         }
         //Create a new Game
         if(source== button[2]){
-            String result=proxy.newGame(userID);
+            try{
+                String result=proxy.newGame(userID);
             
-            switch (result){
-                case "ERROR-NOTFOUND":
-                    System.out.print("cannot find the id of the game");
-                    label_info.setText("ATTENTION: Cannot find the id of the game");
-                    break;
-                case "ERROR-RETRIEVE":
-                    System.out.print("cannot access the games table");
-                    label_info.setText("ATTENTION: Cannot access the games table");
-                    break;
-                case "ERROR-INSERT":
-                    System.out.print("cannot add a new game to the system");
-                    label_info.setText("ATTENTION: Cannot add a new game to the system");
-                    break;
-                case "ERROR-DB":
-                    System.out.print("cannot access the DBMS");
-                    label_info.setText("ATTENTION: Cannot access the DBMS");
-                    break;
-                default:
-                    System.out.print("New Game added");
-                    newGameID=Integer.valueOf(result);
-                    label_info.setText("ATTENTION: Added new game with gameID: "+ newGameID);
-                    TicTacToeGame game= new TicTacToeGame(userID,newGameID);
-                    break;
-            } 
+                switch (result){
+                    case "ERROR-NOTFOUND":
+                        System.out.print("cannot find the id of the game");
+                        label_info.setText("ATTENTION: Cannot find the id of the game");
+                        break;
+                    case "ERROR-RETRIEVE":
+                        System.out.print("cannot access the games table");
+                        label_info.setText("ATTENTION: Cannot access the games table");
+                        break;
+                    case "ERROR-INSERT":
+                        System.out.print("cannot add a new game to the system");
+                        label_info.setText("ATTENTION: Cannot add a new game to the system");
+                        break;
+                    case "ERROR-DB":
+                        System.out.print("cannot access the DBMS");
+                        label_info.setText("ATTENTION: Cannot access the DBMS");
+                        break;
+                    default:
+                        System.out.print("New Game added");
+                        newGameID=Integer.valueOf(result);
+                        label_info.setText("ATTENTION: Added new game with gameID: "+ newGameID);
+                        TicTacToeGame game= new TicTacToeGame(userID,newGameID);
+                        break;
+                }   
+            }catch(Exception exc){
+                 JOptionPane.showMessageDialog(null, exc.getMessage());
+            }
            
            remove(label_info);
            add(label_info);

@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import mywsdl.TTTWebService;
@@ -104,37 +105,40 @@ public class RegistrationScreen extends JFrame implements ActionListener {
            System.out.println(username+" "+ password+ " "+ name+ " "+surname);
            
            if(!(username.isEmpty())&&!(password.isEmpty())&&!(name.isEmpty())&&!(surname.isEmpty())){
-            //registration 
-            userID=proxy.register(username, password, name, surname);    
-           
-             switch(userID){
-               //login was not successful
-               case "ERROR-REPEAT":
+            //registration
+              try{
+                userID=proxy.register(username, password, name, surname); 
+            
+                switch(userID){
+                //login was not successful
+                 case "ERROR-REPEAT":
                    System.out.print("user with the username already exists");
                    label_info.setText("ATTENTION: user with the username already exists");
                     break;
-               case "ERROR-INSERT":
+                 case "ERROR-INSERT":
                    System.out.print("couldn’t add the data to the users table");
                    label_info.setText("ATTENTION: couldn’t add the data to the users table");
                     break;
-               case "ERROR-RETRIEVE":
+                 case "ERROR-RETRIEVE":
                    System.out.print("cannot retrieve the newly inserted data from the users table");
                    label_info.setText("ATTENTION: cannot retrieve the newly inserted data from the users table");
                     break;
-               case "ERROR-DB":
+                 case "ERROR-DB":
                    System.out.print("cannot find the DB");
                    label_info.setText("ATTENTION: cannot find the DB");
                     break;
-               default:
+                 default:
                    System.out.print("Registration was successful");
                    //open Login Screen
-                   LoginScreen loginscreen= new LoginScreen();
-           
-            }
+                   LoginScreen loginscreen= new LoginScreen();    
+                }
+              }catch(Exception exc){
+                   JOptionPane.showMessageDialog(null, exc.getMessage());
+              }
            }else{
-           
-               label_info.setText("Please fill out all informations!");
+              label_info.setText("Please fill out all information!");
            }
+
             add(label_info);
             label_info.setFont(new Font("Serif", Font.BOLD, 15));
             label_info.setForeground(Color.RED);
