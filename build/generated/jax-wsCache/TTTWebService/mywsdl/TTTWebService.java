@@ -50,15 +50,72 @@ public interface TTTWebService {
 
     /**
      * 
+     * @param gid
      * @return
      *     returns java.lang.String
      */
     @WebMethod
     @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "showOpenGames", targetNamespace = "http://server.james.ttt/", className = "mywsdl.ShowOpenGames")
-    @ResponseWrapper(localName = "showOpenGamesResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.ShowOpenGamesResponse")
-    @Action(input = "http://server.james.ttt/TTTWebService/showOpenGamesRequest", output = "http://server.james.ttt/TTTWebService/showOpenGamesResponse")
-    public String showOpenGames();
+    @RequestWrapper(localName = "getBoard", targetNamespace = "http://server.james.ttt/", className = "mywsdl.GetBoard")
+    @ResponseWrapper(localName = "getBoardResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.GetBoardResponse")
+    @Action(input = "http://server.james.ttt/TTTWebService/getBoardRequest", output = "http://server.james.ttt/TTTWebService/getBoardResponse")
+    public String getBoard(
+        @WebParam(name = "gid", targetNamespace = "")
+        int gid);
+
+    /**
+     * 
+     * @param gid
+     * @param x
+     * @param y
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "checkSquare", targetNamespace = "http://server.james.ttt/", className = "mywsdl.CheckSquare")
+    @ResponseWrapper(localName = "checkSquareResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.CheckSquareResponse")
+    @Action(input = "http://server.james.ttt/TTTWebService/checkSquareRequest", output = "http://server.james.ttt/TTTWebService/checkSquareResponse")
+    public String checkSquare(
+        @WebParam(name = "x", targetNamespace = "")
+        int x,
+        @WebParam(name = "y", targetNamespace = "")
+        int y,
+        @WebParam(name = "gid", targetNamespace = "")
+        int gid);
+
+    /**
+     * 
+     * @param uid
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "newGame", targetNamespace = "http://server.james.ttt/", className = "mywsdl.NewGame")
+    @ResponseWrapper(localName = "newGameResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.NewGameResponse")
+    @Action(input = "http://server.james.ttt/TTTWebService/newGameRequest", output = "http://server.james.ttt/TTTWebService/newGameResponse")
+    public String newGame(
+        @WebParam(name = "uid", targetNamespace = "")
+        int uid);
+
+    /**
+     * 
+     * @param gid
+     * @param gstate
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "setGameState", targetNamespace = "http://server.james.ttt/", className = "mywsdl.SetGameState")
+    @ResponseWrapper(localName = "setGameStateResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.SetGameStateResponse")
+    @Action(input = "http://server.james.ttt/TTTWebService/setGameStateRequest", output = "http://server.james.ttt/TTTWebService/setGameStateResponse")
+    public String setGameState(
+        @WebParam(name = "gid", targetNamespace = "")
+        int gid,
+        @WebParam(name = "gstate", targetNamespace = "")
+        int gstate);
 
     /**
      * 
@@ -69,14 +126,29 @@ public interface TTTWebService {
      */
     @WebMethod
     @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "deleteGame", targetNamespace = "http://server.james.ttt/", className = "mywsdl.DeleteGame")
-    @ResponseWrapper(localName = "deleteGameResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.DeleteGameResponse")
-    @Action(input = "http://server.james.ttt/TTTWebService/deleteGameRequest", output = "http://server.james.ttt/TTTWebService/deleteGameResponse")
-    public String deleteGame(
-        @WebParam(name = "gid", targetNamespace = "")
-        int gid,
+    @RequestWrapper(localName = "joinGame", targetNamespace = "http://server.james.ttt/", className = "mywsdl.JoinGame")
+    @ResponseWrapper(localName = "joinGameResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.JoinGameResponse")
+    @Action(input = "http://server.james.ttt/TTTWebService/joinGameRequest", output = "http://server.james.ttt/TTTWebService/joinGameResponse")
+    public String joinGame(
         @WebParam(name = "uid", targetNamespace = "")
-        int uid);
+        int uid,
+        @WebParam(name = "gid", targetNamespace = "")
+        int gid);
+
+    /**
+     * 
+     * @param gid
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "getGameState", targetNamespace = "http://server.james.ttt/", className = "mywsdl.GetGameState")
+    @ResponseWrapper(localName = "getGameStateResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.GetGameStateResponse")
+    @Action(input = "http://server.james.ttt/TTTWebService/getGameStateRequest", output = "http://server.james.ttt/TTTWebService/getGameStateResponse")
+    public String getGameState(
+        @WebParam(name = "gid", targetNamespace = "")
+        int gid);
 
     /**
      * 
@@ -105,54 +177,6 @@ public interface TTTWebService {
     /**
      * 
      * @param gid
-     * @param gstate
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "setGameState", targetNamespace = "http://server.james.ttt/", className = "mywsdl.SetGameState")
-    @ResponseWrapper(localName = "setGameStateResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.SetGameStateResponse")
-    @Action(input = "http://server.james.ttt/TTTWebService/setGameStateRequest", output = "http://server.james.ttt/TTTWebService/setGameStateResponse")
-    public String setGameState(
-        @WebParam(name = "gid", targetNamespace = "")
-        int gid,
-        @WebParam(name = "gstate", targetNamespace = "")
-        int gstate);
-
-    /**
-     * 
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "leagueTable", targetNamespace = "http://server.james.ttt/", className = "mywsdl.LeagueTable")
-    @ResponseWrapper(localName = "leagueTableResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.LeagueTableResponse")
-    @Action(input = "http://server.james.ttt/TTTWebService/leagueTableRequest", output = "http://server.james.ttt/TTTWebService/leagueTableResponse")
-    public String leagueTable();
-
-    /**
-     * 
-     * @param uid
-     * @param gid
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "joinGame", targetNamespace = "http://server.james.ttt/", className = "mywsdl.JoinGame")
-    @ResponseWrapper(localName = "joinGameResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.JoinGameResponse")
-    @Action(input = "http://server.james.ttt/TTTWebService/joinGameRequest", output = "http://server.james.ttt/TTTWebService/joinGameResponse")
-    public String joinGame(
-        @WebParam(name = "uid", targetNamespace = "")
-        int uid,
-        @WebParam(name = "gid", targetNamespace = "")
-        int gid);
-
-    /**
-     * 
-     * @param gid
      * @return
      *     returns java.lang.String
      */
@@ -167,39 +191,21 @@ public interface TTTWebService {
 
     /**
      * 
-     * @param gid
-     * @param x
-     * @param y
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "checkSquare", targetNamespace = "http://server.james.ttt/", className = "mywsdl.CheckSquare")
-    @ResponseWrapper(localName = "checkSquareResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.CheckSquareResponse")
-    @Action(input = "http://server.james.ttt/TTTWebService/checkSquareRequest", output = "http://server.james.ttt/TTTWebService/checkSquareResponse")
-    public String checkSquare(
-        @WebParam(name = "x", targetNamespace = "")
-        int x,
-        @WebParam(name = "y", targetNamespace = "")
-        int y,
-        @WebParam(name = "gid", targetNamespace = "")
-        int gid);
-
-    /**
-     * 
+     * @param uid
      * @param gid
      * @return
      *     returns java.lang.String
      */
     @WebMethod
     @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "getBoard", targetNamespace = "http://server.james.ttt/", className = "mywsdl.GetBoard")
-    @ResponseWrapper(localName = "getBoardResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.GetBoardResponse")
-    @Action(input = "http://server.james.ttt/TTTWebService/getBoardRequest", output = "http://server.james.ttt/TTTWebService/getBoardResponse")
-    public String getBoard(
+    @RequestWrapper(localName = "deleteGame", targetNamespace = "http://server.james.ttt/", className = "mywsdl.DeleteGame")
+    @ResponseWrapper(localName = "deleteGameResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.DeleteGameResponse")
+    @Action(input = "http://server.james.ttt/TTTWebService/deleteGameRequest", output = "http://server.james.ttt/TTTWebService/deleteGameResponse")
+    public String deleteGame(
         @WebParam(name = "gid", targetNamespace = "")
-        int gid);
+        int gid,
+        @WebParam(name = "uid", targetNamespace = "")
+        int uid);
 
     /**
      * 
@@ -218,21 +224,6 @@ public interface TTTWebService {
 
     /**
      * 
-     * @param gid
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "getGameState", targetNamespace = "http://server.james.ttt/", className = "mywsdl.GetGameState")
-    @ResponseWrapper(localName = "getGameStateResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.GetGameStateResponse")
-    @Action(input = "http://server.james.ttt/TTTWebService/getGameStateRequest", output = "http://server.james.ttt/TTTWebService/getGameStateResponse")
-    public String getGameState(
-        @WebParam(name = "gid", targetNamespace = "")
-        int gid);
-
-    /**
-     * 
      * @param uid
      * @return
      *     returns java.lang.String
@@ -245,6 +236,30 @@ public interface TTTWebService {
     public String showAllMyGames(
         @WebParam(name = "uid", targetNamespace = "")
         int uid);
+
+    /**
+     * 
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "leagueTable", targetNamespace = "http://server.james.ttt/", className = "mywsdl.LeagueTable")
+    @ResponseWrapper(localName = "leagueTableResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.LeagueTableResponse")
+    @Action(input = "http://server.james.ttt/TTTWebService/leagueTableRequest", output = "http://server.james.ttt/TTTWebService/leagueTableResponse")
+    public String leagueTable();
+
+    /**
+     * 
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "showOpenGames", targetNamespace = "http://server.james.ttt/", className = "mywsdl.ShowOpenGames")
+    @ResponseWrapper(localName = "showOpenGamesResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.ShowOpenGamesResponse")
+    @Action(input = "http://server.james.ttt/TTTWebService/showOpenGamesRequest", output = "http://server.james.ttt/TTTWebService/showOpenGamesResponse")
+    public String showOpenGames();
 
     /**
      * 
@@ -263,20 +278,5 @@ public interface TTTWebService {
         String username,
         @WebParam(name = "password", targetNamespace = "")
         String password);
-
-    /**
-     * 
-     * @param uid
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "newGame", targetNamespace = "http://server.james.ttt/", className = "mywsdl.NewGame")
-    @ResponseWrapper(localName = "newGameResponse", targetNamespace = "http://server.james.ttt/", className = "mywsdl.NewGameResponse")
-    @Action(input = "http://server.james.ttt/TTTWebService/newGameRequest", output = "http://server.james.ttt/TTTWebService/newGameResponse")
-    public String newGame(
-        @WebParam(name = "uid", targetNamespace = "")
-        int uid);
 
 }
