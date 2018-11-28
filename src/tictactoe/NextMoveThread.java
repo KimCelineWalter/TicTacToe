@@ -83,7 +83,7 @@ public class NextMoveThread extends Thread {
             System.out.println(moves);
         }
         int interval = 1000;
-        panel.fillBoard();
+        //panel.fillBoard();
         if(moves % 2 != i) { // player 1 waits for his move
             panel.enableComponents(panel, false);
             while(moves % 2 != i) { 

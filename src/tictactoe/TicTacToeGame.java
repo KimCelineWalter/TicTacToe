@@ -30,7 +30,7 @@ public class TicTacToeGame extends JFrame{
  private int gameID=0;
  private String symbol;
  private String player2Symbol;
- private int playerNum = 2;
+ private int playerNum = 0;
  
  public TicTacToeGame(int uID, int gID){
      
@@ -61,9 +61,7 @@ public class TicTacToeGame extends JFrame{
      //case 1: client is player 1 and second player joined the game
      panel=new TicTacToePanel();
      add(panel,BorderLayout.CENTER);
-<<<<<<< HEAD
 
-=======
      if(result.equals("-1")){
         label_info.setText("Waiting for second Player");
         playerNum = 1;
@@ -87,10 +85,13 @@ public class TicTacToeGame extends JFrame{
     NextMoveThread thread = new NextMoveThread(gameID, proxy, playerNum, panel);
     thread.start();
      // Game starts
->>>>>>> 38fa20be2280328325ea797b68a224ff157908af
  }
 
     class TicTacToePanel extends JPanel implements ActionListener{
+        
+        private String [][] board = new String[3][3];
+        String winSymbol = "";
+        
         public TicTacToePanel() {
           setLayout(new GridLayout(3,3));
           //setBounds(300,300,200,200);
@@ -118,26 +119,10 @@ public class TicTacToeGame extends JFrame{
             }
             
             int moves = getMoves();
-
-            //if(playerNum == 1) { // player1
-            waitForNextMove(moves, x, y);
-          
-            //}
-            //else { // player2
-                
-            //}
+            checkSquare(moves, x, y);
+            fillBoard();
         }
         
-        public void waitForNextMove(int moves, int x, int y) {
-            boolean squareCheckSuccess = false;
-            squareCheckSuccess = checkSquare(moves, x, y);
-            if(squareCheckSuccess) {
-                //enableComponents(this, false);
-                //NextMoveThread thread = new NextMoveThread(gameID, proxy, playerNum, moves);
-                //thread.start();
-                //enableComponents(this, true);
-            }
-        }
         
         public void enableComponents(Container container, boolean enable) {
             Component[] components = container.getComponents();
@@ -169,6 +154,10 @@ public class TicTacToeGame extends JFrame{
                         JOptionPane.showMessageDialog(null, proxy.takeSquare(x, y, gameID, userID));
                     }
                 }
+                else {
+                    JOptionPane.showMessageDialog(null, "Square is already taken!");
+
+                }
             } catch(NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, proxy.checkSquare(x, y, gameID));
             }
@@ -196,6 +185,7 @@ public class TicTacToeGame extends JFrame{
         public void fillBoard() {
             String line = proxy.getBoard(gameID);
             int noOfMoves = countMoves(line);
+            
             if(noOfMoves > 0) {
                 String [] moves = line.split("\n");
                 String [] axis;
@@ -203,14 +193,97 @@ public class TicTacToeGame extends JFrame{
                     axis = moves[i].split(",");
                     int x = Integer.parseInt(axis[1]);
                     int y = Integer.parseInt(axis[2]);
-                    if(axis[0].equals(userID)) {
-                        buttons[x][y].setText(symbol);
+                    if(axis[0].equals(Integer.toString(userID))) {
+                        buttons[x][y].setText(symbol);                   
+                        board[x][y] = symbol;
                     }
                     else {
                         buttons[x][y].setText(player2Symbol);
+                        board[x][y] = player2Symbol;
+                    }
+                }
+                if(checkWin()) {
+                    //JOptionPane.showMessageDialog(null, "Win!");
+                    if(proxy.getGameState(gameID).equals("0")) {
+                        setGameState();
+                    }  
+                    if(winSymbol.equals(symbol)) {
+                        JOptionPane.showMessageDialog(null, "Congrats! You won the game!");
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "Sorry. You lost the game.");
+                    }
+                    enableComponents(this, false);
+                }
+                if(noOfMoves == 9) {
+                    JOptionPane.showMessageDialog(null, "The game ended up as a draw");
+                    String result = proxy.setGameState(gameID, 3);
+                    try {
+                        int i = Integer.parseInt(result);
+                        enableComponents(this, false);
+                    } catch(Exception e) {
+                       JOptionPane.showMessageDialog(null, result);
+                    }
+                }
+                
+            }
+        }
+        
+        public void setGameState() {
+            String result = "";
+            result = proxy.setGameState(gameID, playerNum);
+            try {
+                int i = Integer.parseInt(result);
+            } catch(Exception e) {
+                JOptionPane.showMessageDialog(null, result);
+            }
+        }
+        
+        public boolean checkWin() {
+            boolean win = false;
+            boolean match = false;
+            //row check
+            for(int r = 0; r < board.length; r++) {
+                String [] row = new String[board[r].length];
+                if(board[r][0] != null)
+                {
+                    for(int c = 0; c < board[c].length - 1; c++) {
+                        row[c] = board[r][c];
+                    }
+                    if(row[0] == row[1] && row[1] == row[2]) {
+                        winSymbol = row[0];
+                        win = true;
+                        break;
                     }
                 }
             }
+            
+            if(!win) {
+                // column check
+                for(int c = 0; c < board[c].length - 1; c++) {
+                    String [] column = new String[board[c].length];
+                    if(board[0][c] != null)
+                    {
+                        for(int r = 0; r < board.length; r++) {
+                            column[r] = board[r][c];
+                        }
+                        if(column[0] == column[1] && column[1] == column[2]) {
+                            winSymbol = column[0];
+                            win = true;
+                            break;
+                        }
+                    }
+                }
+                if(!win) {
+                    if(board[1][1] != null) {
+                        if((board[0][0] == board[1][1] && board[1][1] == board[2][2]) || (board[2][0] == board[1][1] && board[1][1] == board[0][2])) {
+                            winSymbol = board[1][1]; // middle of the board, matches both combinations
+                            win = true;
+                        }
+                    }
+                }
+            }    
+            return win;
         }
     }
     
